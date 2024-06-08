@@ -1,0 +1,39 @@
+from logging import ERROR
+from os import access
+import fake_useragent
+import vk_api
+import requests
+from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
+from selenium import webdriver
+
+
+def auth_vk():
+    print('-' * 20)
+    print('AUTHORIZATION...')
+    try:
+        my_token = '*your token*'
+        session = vk_api.VkApi(token=my_token, auth_handler=True)
+        vk = session.get_api()
+    except vk_api.exceptions.ApiError:
+        print('ERROR: INVALID TOKEN')
+        print('-' * 20)
+    else:
+        print('SUCCESS')
+        print('-' * 20)
+        return vk
+
+
+def get_html(url):
+    auth_vk()
+    response = requests.get(url, headers={'user-agent': UserAgent().random})
+    print('SITE LOADING...')
+    if response.status_code == 200:
+        print('SUCCESS')
+        print('-' * 20)
+        return response
+    else:
+        print('ERROR', response.status_code)
+        print('-' * 20)
+        return ERROR
+
