@@ -1,0 +1,45 @@
+import random
+from random import randint
+import time
+from fake_useragent import UserAgent
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
+import requests
+from bs4 import BeautifulSoup as BS
+
+URL = 'https://pays.avtodor-tr.ru/ckad/payment-of-debt/'
+PATH = r'E:\work\Python_projects\chromedriver.exe'
+PATH = Service(PATH)
+chrome_options = Options()
+
+
+def main():
+    phone = input('number: ').strip()
+    email = input('email: ').strip()
+    number = input('TC: ').strip().upper()
+    number = '*your number*'
+    email = '*your email*'
+    number = '*car's number*'
+    driver = webdriver.Chrome(service=PATH, options=chrome_options)
+    print('-' * 20)
+    print('LOADING...')
+    print('-' * 20)
+    driver.get(URL)
+    driver.find_element(By.CSS_SELECTOR, '[for="other"]').click()
+    time.sleep(3)
+    select = Select(driver.find_element(By.CSS_SELECTOR, '[class="form-control "]'))
+    time.sleep(3)
+    select.select_by_index('1')
+    driver.find_element(By.CSS_SELECTOR, '[inputmode="tel"]').send_keys(phone)
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, '[class="form-control grn "]').send_keys(number)
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, '[inputmode="email"]').send_keys(email)
+    driver.find_element(By.CSS_SELECTOR, '[class="btn   btn-block  svelte-1obbs8v"]').click()
+
+
+main()
