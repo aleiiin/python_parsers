@@ -1,0 +1,27 @@
+from os import link
+import requests
+from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
+
+URL = 'https://mignews.com'
+
+response = requests.get(URL, headers={'user-agent': UserAgent().chrome})
+print('-' * 20)
+print('Status code:', response.status_code)
+print('-' * 20)
+html = response.content
+soup = BeautifulSoup(html, 'html.parser')
+link_news = soup.findAll(lambda tag: tag.name == 'a' and tag.get('class') == ['post-date'])
+link_news = [str(URL) + link_news[i].get('href') for i in range(len(link_news))]
+title_news = soup.findAll(lambda tag: tag.name == 'div' and tag.get('class') == ['text-color-dark'])
+title_news = [title_news[i].text.strip() for i in range(len(title_news))]
+all_news = dict()
+for i in range(len(link_news)):
+    all_news[title_news[i]] = link_news[i]
+print('ALL NEWS:', '\n')
+[print(title + ': ' + link) for title, link in all_news.items()]
+print('\n', '-' * 20)
+
+filtered_news = list()
+link_news = soup.findAll(lambda tag: tag.name == 'a' and tag.get('class') == ['post-date'])
+print(soup.findAll('title'))
